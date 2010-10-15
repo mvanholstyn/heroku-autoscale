@@ -1,7 +1,7 @@
 require "spec_helper"
-require "heroku/autoscale"
+require "heroku/autoscale/dyno"
 
-describe Heroku::Autoscale do
+describe Heroku::Autoscale::Dyno do
 
   include Rack::Test::Methods
 
@@ -11,21 +11,21 @@ describe Heroku::Autoscale do
 
   describe "option validation" do
     it "requires username" do
-      lambda { Heroku::Autoscale.new(noop) }.should raise_error(/Must supply :username/)
+      lambda { Heroku::Autoscale::Dyno.new(noop) }.should raise_error(/Must supply :username/)
     end
 
     it "requires password" do
-      lambda { Heroku::Autoscale.new(noop) }.should raise_error(/Must supply :password/)
+      lambda { Heroku::Autoscale::Dyno.new(noop) }.should raise_error(/Must supply :password/)
     end
 
     it "requires app_name" do
-      lambda { Heroku::Autoscale.new(noop) }.should raise_error(/Must supply :app_name/)
+      lambda { Heroku::Autoscale::Dyno.new(noop) }.should raise_error(/Must supply :app_name/)
     end
   end
 
   describe "with valid options" do
     let(:app) do
-      Heroku::Autoscale.new noop,
+      Heroku::Autoscale::Dyno.new noop,
         :defer => false,
         :username => "test_username",
         :password => "test_password",
