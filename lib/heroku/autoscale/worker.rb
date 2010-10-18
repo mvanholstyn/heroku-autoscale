@@ -7,7 +7,7 @@ module Heroku
         # dont do anything if we scaled too frequently ago
         # return if (Time.now - last_scaled) < options[:min_frequency]
 
-        original_workers = workers = current_workers
+        original_workers = workers = current_workers(env)
         depth = queue_depth(env)
 
         workers -= 1 if depth <= options[:queue_depth_low]
@@ -21,7 +21,7 @@ module Heroku
         set_workers(workers) if workers != original_workers
       end
 
-      def current_workers
+      def current_workers(env)
         heroku.info(options[:app_name])[:workers].to_i
       end
 

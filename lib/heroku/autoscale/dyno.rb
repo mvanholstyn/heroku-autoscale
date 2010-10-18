@@ -20,7 +20,7 @@ module Heroku
         set_dynos(dynos) if dynos != original_dynos
       end
 
-      def current_dynos
+      def current_dynos(env)
         (env["HTTP_X_HEROKU_DYNOS_IN_USE"] || heroku.info(options[:app_name])[:dynos]).to_i
       end
 
