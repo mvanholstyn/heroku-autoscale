@@ -1,4 +1,3 @@
-require "eventmachine"
 require "heroku"
 
 module Heroku
@@ -28,7 +27,7 @@ module Heroku
       
       def autoscale_or_defer(env)
         if options[:defer]
-          EventMachine.defer { autoscale(env) }
+          Thread.new { autoscale(env) }
         else
           autoscale(env)
         end
