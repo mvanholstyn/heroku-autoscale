@@ -7,7 +7,7 @@ module Heroku
         # dont do anything if we scaled too frequently ago
         # return if (Time.now - last_scaled) < options[:min_frequency]
 
-        original_dynos = dynos = current_dynos
+        original_dynos = dynos = current_dynos(env)
         wait = queue_wait(env)
 
         dynos -= 1 if wait <= options[:queue_wait_low]
@@ -21,7 +21,7 @@ module Heroku
       end
 
       def current_dynos
-        heroku.info(options[:app_name])[:dynos].to_i
+        (env["HTTP_X_HEROKU_DYNOS_IN_USE"] || heroku.info(options[:app_name])[:dynos]).to_i
       end
 
       def default_options
@@ -35,11 +35,12 @@ module Heroku
         }
       end
 
-      # HTTP_X_HEROKU_DYNOS_IN_USE
-      # HTTP_X_HEROKU_QUEUE_WAIT_TIME
-      # HTTP_X_HEROKU_QUEUE_DEPTH,
       def queue_wait(env)
         env["HTTP_X_HEROKU_QUEUE_WAIT_TIME"].to_i
+      end
+
+      def queue_depth(env)
+        env['HTTP_X_HEROKU_QUEUE_DEPTH'].to_i
       end
 
       def set_dynos(count)
