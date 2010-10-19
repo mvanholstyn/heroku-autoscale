@@ -27,9 +27,17 @@ module Heroku
       
       def autoscale_or_defer(env)
         if options[:defer]
-          Thread.new { autoscale(env) }
+          Thread.new { with_exception_handling { autoscale(env) } }
         else
-          autoscale(env)
+          with_exception_handling { autoscale(env) }
+        end
+      end
+
+      def with_exception_handling
+        begin
+          yield
+        rescue Exception => e
+          # just swallow the error and don't autoscale
         end
       end
     end
