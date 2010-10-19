@@ -21,7 +21,8 @@ module Heroku
       end
 
       def current_dynos(env)
-        (env["HTTP_X_HEROKU_DYNOS_IN_USE"] || heroku.info(options[:app_name])[:dynos]).to_i
+        # env["HTTP_X_HEROKU_DYNOS_IN_USE"]
+        heroku.info(options[:app_name])[:dynos].to_i
       end
 
       def default_options
