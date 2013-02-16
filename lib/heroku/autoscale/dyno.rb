@@ -9,12 +9,14 @@ module Heroku
 
         original_dynos = dynos = current_dynos(env)
         wait = queue_wait(env)
+        depth = queue_depth(env)
 
         dynos -= 1 if wait <= options[:queue_wait_low]
         dynos += 1 if wait >= options[:queue_wait_high]
 
         dynos = options[:min_dynos] if dynos < options[:min_dynos]
         dynos = options[:max_dynos] if dynos > options[:max_dynos]
+        dynos = depth if dynos > depth
         dynos = 1 if dynos < 1
 
         set_dynos(dynos) if dynos != original_dynos
